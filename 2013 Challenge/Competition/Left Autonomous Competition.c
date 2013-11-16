@@ -29,7 +29,7 @@ void moveTillWhiteLine();
 //void testColor();
 void turnLeftTillLine();
 void moveForward();
-
+void reverse();
 
 int colorMid =0;
 int sColor =6;
@@ -60,11 +60,13 @@ void initializeRobot()
   // Sensors are automatically configured and setup by ROBOTC. They may need a brief time to stabilize.
 
 int black;
-wait10Msec(500);
+wait10Msec(200);
 black=SensorValue[colorport];
-wait10Msec(100);
+wait10Msec(50);
 black=SensorValue[colorport];
-colormid=(black+black);
+colorMid=(black+(black/2));
+StringFormat(disp,"%d %d", black, colorMid);
+nxtDisplayCenteredTextLine(2, disp );
 
 	//PlayTone(850, 100);
 	//int white;
@@ -134,6 +136,7 @@ task main()
 	moveTillWhiteLine();
 	moveForward();
 	turnLeftTillLine();
+	reverse();
 	followTheLineFor3Turns();
 
 	// ================= CyberFalcon Code end ============
@@ -147,36 +150,64 @@ void moveForward(){
 	motor[motorD]= 100;
 	motor[motorE]= 100;
 	wait1Msec(250);
+	motor[motorD]= 0;
+	motor[motorE]= 0;
+}
+
+void reverse(){
+	motor[motorD]= -50;
+	motor[motorE]= -50;
+	wait1Msec(100);
+	motor[motorD]= 0;
+	motor[motorE]= 0;
+	wait1Msec(200);
 }
 
 
-// what does this do?
-void followTheLineFor3Turns()
-{
- string disp;
- bool move = true;
 
+void followTheLineFor3Turns(){
+ bool move= true;
  nMotorEncoder[motorE] = 0;
  while (move) {
-   sColor = SensorValue[colorport];
-   //StringFormat(disp,"%d", sColor);
-   //nxtDisplayCenteredTextLine(2, disp );
-   if (sColor > colorMid)
-     {
-       motor[motorD] = 60;
-       motor[motorE] = 40;
-     }
-     else
-     {
-       motor[motorE] = 60;
-       motor[motorD] = 40;
-     }
-   if (nMotorEncoder[motorE] > 1500) move = false;
+       motor[motorD] = 100;
+       motor[motorE] = 100;
+   if (nMotorEncoder[motorE] > 4200) move = false;
  }
        motor[motorE] = 0;
        motor[motorD] = 0;
 
 }
+
+
+
+
+
+//void followTheLineFor3Turns()
+//{
+// string disp;
+// bool move = true;
+
+// nMotorEncoder[motorE] = 0;
+// while (move) {
+//   sColor = SensorValue[colorport];
+//   //StringFormat(disp,"%d", sColor);
+//   //nxtDisplayCenteredTextLine(2, disp );
+//   if (sColor > colorMid)
+//     {
+//       motor[motorD] = 90;
+//       motor[motorE] = 70;
+//     }
+//     else
+//     {
+//       motor[motorE] = 90;
+//       motor[motorD] = 70;
+//     }
+//   if (nMotorEncoder[motorE] > 3500) move = false;
+// }
+//       motor[motorE] = 0;
+//       motor[motorD] = 0;
+
+//}
 
 
 void turnLeftTillLine(){
@@ -190,9 +221,10 @@ void turnLeftTillLine(){
 			  StringFormat(disp,"%d", sColor);
 			  nxtDisplayCenteredTextLine(2, disp );
 			  }
-
-				motor[motorD] = -50;
-				motor[motorE] = 100;
+				// move in opposite direction to be back on the line
+				motor[motorD] = 0;
+				motor[motorE] = 0;
+				wait10Msec(100);
 }
 
 
