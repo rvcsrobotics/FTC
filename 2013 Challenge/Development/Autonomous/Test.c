@@ -3,7 +3,7 @@
 #pragma config(Sensor, S2,     touchSense,     sensorTouch)
 #pragma config(Motor,  mtr_Matrix_S1_1, motorD,        tmotorMatrix, openLoop, encoder)
 #pragma config(Motor,  mtr_Matrix_S1_2, motorE,        tmotorMatrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_Matrix_S1_3, motorF,        tmotorMatrix, openLoop, encoder)
+#pragma config(Motor,  mtr_Matrix_S1_3, motorF,        tmotorMatrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_Matrix_S1_4, motorG,        tmotorMatrix, openLoop)
 #pragma config(Servo,  srvo_Matrix_S1_1, servo1,               tServoNone)
 #pragma config(Servo,  srvo_Matrix_S1_2, servo2,               tServoNone)
@@ -42,6 +42,10 @@ bool runrobot=true;
 			if (dEncoder> 1440) runrobot=false;
 	}
 
+	motor[motorD]=0;
+	motor[motorE]=0;
+
+
 	bool moveArm=true;
 	nMotorEncoder[motorF]=0;
 
@@ -54,11 +58,17 @@ bool runrobot=true;
 	nMotorEncoder[motorF]=0;
 	moveArm=true;
 
-	while (moveArm) {
-			motor[motorF]=-100;
-			int fEncoder = nMotorEncoder[motorF];
-			nxtDisplayTextLine(2, " e val = %d" , fEncoder);
-			if (fEncoder< -1440) moveArm=false;
-	}
+	// ** Sensor on motor F is NOT working , hence we cannot sense rotations
+	//while (moveArm) {
+	//		motor[motorF]=-100;
+	//		int fEncoder = nMotorEncoder[motorF];
+	//		nxtDisplayTextLine(2, " e val = %d" , fEncoder);
+	//		if (fEncoder< -1440) moveArm=false;
+	//		}
+
+	motor[motorF]=-100;
+	wait10Msec(200);
+
+
 motor[motorF]=0;
 }
