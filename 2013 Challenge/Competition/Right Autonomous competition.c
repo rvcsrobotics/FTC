@@ -25,11 +25,11 @@
 
 void followTheLineFor3Turns();
 void moveTillWhiteLine();
-void testEncoder();
-void testColor();
+//void testEncoder();
+//void testColor();
 void turnRightTillLine();
 void moveForward();
-
+void reverse();
 
 int colorMid =0;
 int sColor =6;
@@ -59,28 +59,36 @@ void initializeRobot()
   // Place code here to sinitialize servos to starting positions.
   // Sensors are automatically configured and setup by ROBOTC. They may need a brief time to stabilize.
 
+int black;
+wait10Msec(200);
+black=SensorValue[colorport];
+wait10Msec(50);
+black=SensorValue[colorport];
+colorMid=(black+(black/2));
+StringFormat(disp,"%d %d", black, colorMid);
+nxtDisplayCenteredTextLine(2, disp );
 
-	PlayTone(850, 100);
-	int white;
-	white= SensorValue[colorport];
-	wait10Msec(200);
-	white= SensorValue[colorport];
-  StringFormat(disp,"White is %d", white);
-  nxtDisplayCenteredTextLine(2, disp );
-	wait10Msec(200);
+	//PlayTone(850, 100);
+	//int white;
+	//white= SensorValue[colorport];
+	//wait10Msec(200);
+	//white= SensorValue[colorport];
+ // StringFormat(disp,"White is %d", white);
+ // nxtDisplayCenteredTextLine(2, disp );
+	//wait10Msec(200);
 
-	PlayTone(800, 100);
-	wait10Msec(200);
-	int black= SensorValue[colorport];
-  StringFormat(disp,"Black is %d", black);
-  nxtDisplayCenteredTextLine(2, disp );
-	wait10Msec(200);
+	//PlayTone(800, 100);
+	//wait10Msec(200);
+	//int black= SensorValue[colorport];
+ // StringFormat(disp,"Black is %d", black);
+ // nxtDisplayCenteredTextLine(2, disp );
+	//wait10Msec(200);
 
-	colorMid = (white+black)/2;
-  StringFormat(disp,"Mid is %d", colorMid);
-  nxtDisplayCenteredTextLine(2, disp );
-	PlayTone(750, 100);
-	wait10Msec(500);
+	//colorMid = (white+black)/2;
+ // StringFormat(disp,"Mid is %d", colorMid);
+ // nxtDisplayCenteredTextLine(2, disp );
+	//PlayTone(750, 100);
+	//wait10Msec(500);
 
   return;
 }
@@ -123,11 +131,12 @@ task main()
   ///////////////////////////////////////////////////////////
 
 
-	waitForStart(); // Wait for the beginning of autonomous phase.
+	//waitForStart(); // Wait for the beginning of autonomous phase.
 
 	moveTillWhiteLine();
 	moveForward();
 	turnRightTillLine();
+	reverse();
 	followTheLineFor3Turns();
 
 	// ================= CyberFalcon Code end ============
@@ -141,36 +150,64 @@ void moveForward(){
 	motor[motorD]= 100;
 	motor[motorE]= 100;
 	wait1Msec(250);
+	motor[motorD]= 0;
+	motor[motorE]= 0;
+}
+
+void reverse(){
+	motor[motorD]= -50;
+	motor[motorE]= -50;
+	wait1Msec(100);
+	motor[motorD]= 0;
+	motor[motorE]= 0;
+	wait1Msec(200);
 }
 
 
-// what does this do?
-void followTheLineFor3Turns()
-{
- string disp;
- bool move = true;
 
+void followTheLineFor3Turns(){
+ bool move= true;
  nMotorEncoder[motorE] = 0;
  while (move) {
-   sColor = SensorValue[colorport];
-   //StringFormat(disp,"%d", sColor);
-   //nxtDisplayCenteredTextLine(2, disp );
-   if (sColor > colorMid)
-     {
-       motor[motorD] = 60;
-       motor[motorE] = 40;
-     }
-     else
-     {
-       motor[motorE] = 60;
-       motor[motorD] = 40;
-     }
-   if (nMotorEncoder[motorE] > 2500) move = false;
+       motor[motorD] = 100;
+       motor[motorE] = 100;
+   if (nMotorEncoder[motorE] > 4200) move = false;
  }
        motor[motorE] = 0;
        motor[motorD] = 0;
 
 }
+
+
+
+
+
+//void followTheLineFor3Turns()
+//{
+// string disp;
+// bool move = true;
+
+// nMotorEncoder[motorE] = 0;
+// while (move) {
+//   sColor = SensorValue[colorport];
+//   //StringFormat(disp,"%d", sColor);
+//   //nxtDisplayCenteredTextLine(2, disp );
+//   if (sColor > colorMid)
+//     {
+//       motor[motorD] = 90;
+//       motor[motorE] = 70;
+//     }
+//     else
+//     {
+//       motor[motorE] = 90;
+//       motor[motorD] = 70;
+//     }
+//   if (nMotorEncoder[motorE] > 3500) move = false;
+// }
+//       motor[motorE] = 0;
+//       motor[motorD] = 0;
+
+//}
 
 
 void turnRightTillLine(){
@@ -184,10 +221,10 @@ void turnRightTillLine(){
 			  StringFormat(disp,"%d", sColor);
 			  nxtDisplayCenteredTextLine(2, disp );
 			  }
-
-				motor[motorD] = 70;
+				// move in opposite direction to be back on the line
+				motor[motorD] = 0;
 				motor[motorE] = 0;
-				wait10Msec(20);
+				wait10Msec(100);
 }
 
 
